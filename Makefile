@@ -1,5 +1,9 @@
-test: test.c build/git-state.h
-	gcc -o $@ $< -I.
+shell:
+	$(MAKE) -f Makefile.shell
+pure:
+	$(MAKE) -f Makefile.pure
 
-$(info $(shell sh update-git-state.sh))
+clean:
+	-rm -f build/git-state
+	-rm -f build/git-state.h
 

@@ -1,0 +1,38 @@
+test: test.c build/git-state.h
+	gcc -o $@ $< -I.
+
+git_status:=$(shell git status -uno --porcelain)
+git_sha:=$(shell git rev-parse --short=8 HEAD)
+
+ifeq (,$(git_status))
+git_clean:=CC
+else
+git_clean:=DD
+endif
+git_state:=$(git_sha):$(git_clean)
+last_state:=$(file <build/git-state)
+
+.PRECIOUS: build/git-state
+build/git-state:
+	$(info writing git state to $@)
+	$(file >$@,$(git_state))
+
+ifneq ($(git_state),$(last_state))
+$(info git states differ: $(git_state) != $(last_state))
+.PHONY: build/git-state.h
+.PHONY: build/git-state
+endif
+
+build/git-state.h: build/git-state
+	$(info generating header file $@: $?)
+	$(file >$@,$(git-state.h))
+
+define git-state.h
+
+#define GIT_SHA 0x$(git_sha)
+#define GIT_SHA_STRING "$(git_sha)"
+#define GIT_CLEAN 0x$(git_clean)
+
+endef
+
+
