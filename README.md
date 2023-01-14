@@ -19,7 +19,7 @@ build/git-state.h
 ```
 
 which has the obvious disadvantate that `test` will be rebuilt every time you
-invoke make since build/git-state.h is generated every time as well.
+invoke make, since build/git-state.h is generated every time as well.
 
 ## Broken idea of avoiding this
 
@@ -62,8 +62,13 @@ Therefore:
 Although still relying on (unavoidable, but side-effect free) `$(shell)` calls
 to call git, the two variants [Makefile.pure](Makefile.pure) and
 [Makefile.eval](Makefile.eval) do contain actual rules and recipes that generate
-`build/git-state.h` - even going further and generating the header file purely
-with make macros and calls to the `$(file)` function.
+`build/git-state.h`
+
+> we're even going further and generating the header file purely
+> with make macros and calls to the `$(file)` function.
+>
+> See [the last section](#side-note-generating-files-without-external-scripts)
+> for details
 
 The differences:
 
