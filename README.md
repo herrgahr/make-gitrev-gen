@@ -99,7 +99,7 @@ are_same=y
 
 # .PHONY: $(if $(are_same),,build/git-state build/git-state.h)
 # .PHONY: $(if y,,build/git-state build/git-state.h)
-.PHONY: build/git-state build/git-state.h
+.PHONY: 
 ```
 
 Assuming `git_state=aa11bb22.dd` and `last_state=aa11bb22.cc` (both at the same HEAD, tree changed from clean to dirty);
@@ -113,7 +113,8 @@ are_same=
 
 # .PHONY: $(if $(are_same),,build/git-state build/git-state.h)
 #.PHONY: $(if ,,build/git-state build/git-state.h)
-.PHONY: 
+.PHONY: build/git-state build/git-state.h
+# success \o/
 ```
 
 ## side-note: generating files without external scripts
