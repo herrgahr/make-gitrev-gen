@@ -5,7 +5,7 @@ STATE_FILE=build/git-state
 GIT_SHA=`git rev-parse --short=8 HEAD`
 
 [[ -z "$(git status -uno --porcelain)" ]] && GIT_CLEAN=CC || GIT_CLEAN=DD
-STATE="${GIT_SHA}:${GIT_CLEAN}"
+STATE="${GIT_SHA}.${GIT_CLEAN}"
 # touch once to avoid error from cat
 touch ${STATE_FILE}
 LAST_STATE=`cat ${STATE_FILE}`

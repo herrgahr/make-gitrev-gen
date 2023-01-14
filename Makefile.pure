@@ -9,7 +9,7 @@ git_clean:=CC
 else
 git_clean:=DD
 endif
-git_state:=$(git_sha):$(git_clean)
+git_state:=$(git_sha).$(git_clean)
 last_state:=$(file <build/git-state)
 
 .PRECIOUS: build/git-state

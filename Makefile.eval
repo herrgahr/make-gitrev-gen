@@ -1,0 +1,48 @@
+# same principle as Makefile.pure but without top-level ifeq,ifneq statements
+
+test: test.c build/git-state.h
+	gcc -o $@ $< -I.
+
+git_status:=$(shell git status -uno --porcelain)
+git_sha:=$(shell git rev-parse --short=8 HEAD)
+
+# Trick: expand the variable $(git_clean_$(git_status))
+# for empty git_status, this will evaluate to $(git_clean_), hence CC
+# for non-empty git_status, this will evaluate to $(git_clean_A) or
+# $(git_clean_M) or alike, which are empty.
+# Putting this into an $(or ...,DD) will then yield DD for non-empty git_status
+
+git_clean_=CC
+git_clean:=$(or $(git_clean_$(git_status)),DD)
+
+git_state:=$(git_sha).$(git_clean)
+last_state:=$(file <build/git-state)
+
+# similar trick as above, we want to get a non-empty value
+# in case old and new state differ.
+# Here we involve one more step: we declare a non-empty variable
+# called are_same_$(git_state) and then expand $(are_same_$(last_state))
+
+are_same_$(git_state):=y
+are_same=$(are_same_$(last_state))
+
+.PHONY: $(if $(are_same),,build/git-state build/git-state.h)
+
+.PRECIOUS: build/git-state
+build/git-state:
+	$(info writing git state to $@)
+	$(file >$@,$(git_state))
+
+build/git-state.h: build/git-state
+	$(info generating header file $@: $?)
+	$(file >$@,$(git-state.h))
+
+define git-state.h
+
+#define GIT_SHA 0x$(git_sha)
+#define GIT_SHA_STRING "$(git_sha)"
+#define GIT_CLEAN 0x$(git_clean)
+
+endef
+
+
